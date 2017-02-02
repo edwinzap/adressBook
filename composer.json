@@ -1,0 +1,19 @@
+{
+    "name": "forge/adress-book",
+    "authors": [
+        {
+            "name": "Edwin ZAP",
+            "email": "tictactiptop@hotmail.com"
+        }
+    ],
+    "require": {
+        "twbs/bootstrap": "^3.3",
+        "respect/validation": "^1.1"
+    },
+    
+    "autoload": {
+        "psr-4":{
+            "AdressBook\\": "./vendor/MiguelForget"
+        }
+    }
+}
