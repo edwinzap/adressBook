@@ -3,6 +3,9 @@
 require 'vendor/autoload.php';
 session_start();
 
+if(!isset($_SESSION['utilisateur'])){
+    header('Location: index.php');
+}
 if(isset($_GET['idContact']))
 {
     $contact = $_SESSION['current_contact']  = AdressBook\Model::getContact($_GET['idContact']);

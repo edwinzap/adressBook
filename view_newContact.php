@@ -2,8 +2,11 @@
 <?php
 require 'vendor/autoload.php';
 session_start();
+require 'errorContact.php';
 
-require 'errorContact.php'
+if(!isset($_SESSION['utilisateur'])){
+    header('Location: index.php');
+}
 ?>
 
 <html>

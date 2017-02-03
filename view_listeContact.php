@@ -6,6 +6,10 @@ unset($_SESSION['post_contact']);
 unset($_SESSION['success_contact']);
 unset($_SESSION['success_login']);
 
+if(!isset($_SESSION['utilisateur'])){
+    header('Location: index.php');
+}
+
 if(!isset($_SESSION['recherche']) || empty($_SESSION['recherche']))
 {
     unset($_SESSION['listeContact']);
