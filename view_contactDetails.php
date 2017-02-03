@@ -2,6 +2,11 @@
 <?php
 require 'vendor/autoload.php';
 session_start();
+
+if(isset($_GET['idContact']))
+{
+    $contact = $_SESSION['current_contact']  = AdressBook\Model::getContact($_GET['idContact']);
+}
 ?>
 <html>
     <head>
@@ -20,16 +25,16 @@ session_start();
         <div class="panel panel-default container text-primary">
             <h2 class="panel-heading text-center">Details du contact</h2>
             <div class="panel-body">
-                <?php
-                $contacts = array_filter(
-                        $_SESSION['listeContact'], function ($e) {
-                    return $e->GetId() == $_GET['idContact'];
-                }
-                );
-                $contact = array_shift($contacts);
-                echo $contact->PrintAllDetails();
-                ?>
-                <a href="view_listeContact.php" class="btn btn-primary pull-right">Annuler</a>    
+                <?php if(isset($_GET['idContact'])){echo $contact->printAllDetails();}else{echo 'Erreur: aucun Id trouvé !';} ?>
+                <div class="row" style="margin-top:30px;">
+                    <form action="post.php" method="post" class="form">
+                        <div class="form-group" style="margin:0">
+                            <input type="submit" name="view_contactDetailModifier" value="Modifier" class="btn btn-primary"/>
+                            <input type="submit" name="view_contactDetailSupprimer" value="Supprimer" class="btn btn-primary"/>
+                            <a href="view_listeContact.php" class="btn btn-primary pull-right">Annuler</a>  
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </body>

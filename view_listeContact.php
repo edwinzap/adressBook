@@ -2,6 +2,14 @@
 <?php
 require 'vendor/autoload.php';
 session_start();
+unset($_SESSION['post_contact']);
+unset($_SESSION['success_contact']);
+unset($_SESSION['success_login']);
+
+if(!isset($_SESSION['recherche']) || empty($_SESSION['recherche']))
+{
+    unset($_SESSION['listeContact']);
+}
 ?>
 <html>
     <head>
@@ -39,7 +47,7 @@ session_start();
                         echo '<p>Nombre de contacts trouvés: <strong>' . count($_SESSION['listeContact']) . '</strong></p>';
                         echo '<ul>'; 
                         foreach ($_SESSION['listeContact'] as $contact) {
-                            echo '<li><a href="view_contactDetails.php?idContact=' . $contact->getId() . '">' . $contact->PrintDetails() . '</a></li>';
+                            echo '<li><a href="view_contactDetails.php?idContact=' . $contact->getId() . '">' . $contact->printDetails() . '</a></li>';
                         }
                         echo '</ul>';
                     }

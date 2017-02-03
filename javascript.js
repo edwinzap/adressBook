@@ -8,7 +8,6 @@ function validate() {
 
         var message = document.getElementById("message");
         message.innerHTML = "Les mots de passe ne correspondent pas";
-        message.style.color = "red";
 
         return false;
     } else {

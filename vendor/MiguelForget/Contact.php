@@ -95,7 +95,7 @@ class Contact {
     }
 
     function getNumero() {
-        if ($this->Numero==0) {
+        if ($this->Numero == 0) {
             return null;
         } else {
             return $this->Numero;
@@ -103,7 +103,7 @@ class Contact {
     }
 
     function getCodePostal() {
-        if ($this->CodePostal==0) {
+        if ($this->CodePostal == 0) {
             return null;
         } else {
             return $this->CodePostal;
@@ -146,11 +146,11 @@ class Contact {
         $this->Ville = $Ville;
     }
 
-    public function PrintDetails() {
+    public function printDetails() {
         return $text = $this->Prenom . " " . strtoupper($this->Nom);
     }
 
-    public function PrintFullDetails() {
+    public function printFullDetails() {
         return "Id: " . $this->Id .
                 "<br>IdUtilisateur: " . $this->IdUtilisateur .
                 "<br>Nom: " . $this->Nom .
@@ -161,18 +161,38 @@ class Contact {
                 "<br>CodePostal: " . $this->CodePostal .
                 "<br>Ville: " . $this->Ville;
     }
-    public function PrintAllDetails(){
-        $text=  "<p><strong>".ucfirst($this->Prenom) . " " .strtoupper($this->Nom). "</strong></p>".
-                "<p>". $this->Telephone . "</p>";
-        if($this->getVille()!=null || $this->getRue()!=null ||$this->getNumero()!=null ||$this->CodePostal!=null){
-            $text = $text . "<h3>Adresse</h3>". $this->PrintAdresse();
+
+    public function printAllDetails() {
+        $text = "<p><strong>" . ucfirst($this->Prenom) . " " . strtoupper($this->Nom) . "</strong></p>";
+
+        if (!empty($this->Telephone)) {
+            if (!preg_match('#\+#', $this->Telephone)) {
+                if (strlen($this->Telephone) < 10) {
+                    $start = 3;
+                } else {
+                    $start = 4;
+                }
+            } else {
+                if (strlen($this->Telephone) < 12) {
+                    $start = 5;
+                } else {
+                    $start = 6;
+                }
+            }
+            $tel = substr($this->Telephone, 0, $start) . "/" . substr($this->Telephone, $start,6);
+
+            $text = $text . "<p>" . $tel . "</p>";
+        }
+
+        if ($this->getVille() != null || $this->getRue() != null || $this->getNumero() != null || $this->CodePostal != null) {
+            $text = $text . "<h3>Adresse</h3>" . $this->printAdresse();
         }
         return $text;
-                
     }
-    public function PrintAdresse(){
-        return "<p>". ucfirst($this->getRue()). ", " . $this->getNumero() ."</p>".
-                "<p>". $this->getCodePostal() ." ". $this->getVille()."</p>"; 
+
+    public function printAdresse() {
+        return "<p>" . ucfirst($this->getRue()) . ", " . $this->getNumero() . "</p>" .
+                "<p>" . $this->getCodePostal() . " " . $this->getVille() . "</p>";
     }
 
 }

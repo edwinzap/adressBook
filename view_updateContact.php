@@ -2,7 +2,6 @@
 <?php
 require 'vendor/autoload.php';
 session_start();
-
 require 'errorContact.php'
 ?>
 
@@ -21,12 +20,13 @@ require 'errorContact.php'
     <body class="bg-primary" onload="SetFocus('nom')">
         <?php include 'title.html'; ?>
         <div class="panel panel-default container">
-            <h2 class="panel-heading text-center">Nouveau contact</h2>
+            <h2 class="panel-heading text-center">Modification du contact</h2>
             <form method="post" action="post.php" class="panel-body  text-info">
                 <?php include 'contactForm.php' ?>
                 <div class="btn-toolbar pull-right">
-                    <a class="btn btn-primary" href="view_listeContact.php">Annuler</a>
-                    <input type="submit" class="btn btn-primary" name="view_newContact" value="Ajouter le contact"/>
+                    <a class="btn btn-primary" href="view_contactDetails.php?idContact=<?php echo $id ?>">Annuler</a>
+                    <input type="hidden" name="id" value="<?php echo $id;?>"/>
+                    <input type="submit" class="btn btn-primary" name="view_updateContact" value="Enregistrer"/>
                 </div>
             </form>   
         </div>

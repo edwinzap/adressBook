@@ -2,6 +2,10 @@
 <?php
 require 'vendor/autoload.php';
 session_start();
+unset($_SESSION['success_signIn']);
+if(isset($_SESSION['utilisateur'])){
+    header('Location: view_listeContact.php');
+}
 
 $login="";
 if (isset($_SESSION['success_login'])) {

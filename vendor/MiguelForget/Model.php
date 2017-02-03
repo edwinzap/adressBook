@@ -17,12 +17,11 @@ class Model {
 
     const CONNECTION_STRING = 'mysql:host=localhost;dbname=adressbook';
     const USER = 'miguel';
-    const PASSWORD = 'test123';
+    const PASSWORD = 'formig09';
 
-    private static function GetUtilisateur($utilisateur) {
+    private static function getUtilisateur($utilisateur) {
         try {
-            //$pdo = new PDO(self::CONNECTION_STRING,self::USER,self::PASSWORD);    
-            $pdo = new PDO(self::CONNECTION_STRING, 'root');
+            $pdo = new PDO(self::CONNECTION_STRING, self::USER, self::PASSWORD);
             $sql = "SELECT * FROM utilisateur WHERE login=:login LIMIT 1";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':login', $utilisateur->getLogin());
@@ -33,9 +32,9 @@ class Model {
         }
     }
 
-    static function ValidateLogin($utilisateur) {
+    static function validateLogin($utilisateur) {
         try {
-            $stmt = self::GetUtilisateur($utilisateur);
+            $stmt = self::getUtilisateur($utilisateur);
             $r = $stmt->fetchObject();
 
             if ($stmt->rowCount() > 0 && password_verify($utilisateur->getPassword(), $r->password)) {
@@ -52,9 +51,9 @@ class Model {
         }
     }
 
-    static function UtilisateurExists($utilisateur) {
+    static function utilisateurExists($utilisateur) {
         try {
-            $count = self::GetUtilisateur($utilisateur)->rowCount();
+            $count = self::getUtilisateur($utilisateur)->rowCount();
 
             if ($count > 0) {
                 return true;
@@ -65,9 +64,9 @@ class Model {
         }
     }
 
-    static function AddUtilisateur($utilisateur) {
+    static function addUtilisateur($utilisateur) {
 
-        if (self::UtilisateurExists($utilisateur) == false) {
+        if (self::utilisateurExists($utilisateur) == false) {
 
             $pdo = new PDO(self::CONNECTION_STRING, 'root');
             $sql = "INSERT INTO Utilisateur(login, password) VALUES (:login,:password)";
@@ -82,15 +81,13 @@ class Model {
         }
     }
 
-    static function GetContactWhere($id, $value) {
+    static function getContactWhere($idUtilisateur, $value) {
         try {
             $value = $value . "%"; //Pourcentage ne doit pas être mis dans la requête => erreur !
-            //$pdo = new PDO(self::CONNECTION_STRING,self::USER,self::PASSWORD);    
-            $pdo = new PDO(self::CONNECTION_STRING, 'root');
-            $sql = "SELECT * FROM contact WHERE id_utilisateur=:id_utilisateur AND Nom LIKE :value OR Prenom LIKE :value";
-            //$sql = "SELECT * FROM contact WHERE id_utilisateur=:id_utilisateur";
+            $pdo = new PDO(self::CONNECTION_STRING, self::USER, self::PASSWORD);
+            $sql = "SELECT * FROM contact WHERE id_utilisateur=:id_utilisateur AND Nom LIKE :value OR Prenom LIKE :value ORDER BY Prenom";
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':id_utilisateur', $id);
+            $stmt->bindParam(':id_utilisateur', $idUtilisateur);
             $stmt->bindParam(':value', $value);
             $stmt->execute();
 
@@ -107,23 +104,83 @@ class Model {
         }
     }
 
-    static function AddContact($contact) {
+    static function addContact($contact) {
         try {
-            $pdo = new PDO(self::CONNECTION_STRING, 'root');
-            $sql = "INSERT INTO Contact(nom,prenom,telephone,rue,numero,codePostal,ville, id_utilisateur) VALUES (:nom,:prenom,:telephone,:rue,:numero,:codePostal,:ville,:id_utilisateur)";
+            $pdo = new PDO(self::CONNECTION_STRING, self::USER, self::PASSWORD);
+            $sql = "INSERT INTO Contact(nom, prenom,telephone,rue,numero,codePostal,ville, id_utilisateur) VALUES (:nom,:prenom,:telephone,:rue,:numero,:codePostal,:ville,:id_utilisateur)";
             $stmt = $pdo->prepare($sql);
-            
+
             $stmt->bindParam(':nom', $contact->getNom());
             $stmt->bindParam(':prenom', $contact->getPrenom());
-            $stmt->bindParam(':telephone',$contact->getTelephone());
+            $stmt->bindParam(':telephone', $contact->getTelephone());
             $stmt->bindParam(':rue', $contact->getRue());
             $stmt->bindParam(':numero', $contact->getNumero());
             $stmt->bindParam(':codePostal', $contact->getCodePostal());
             $stmt->bindParam(':ville', $contact->getVille());
             $stmt->bindParam(':id_utilisateur', $contact->getIdUtilisateur());
-            
+
             $stmt->execute();
             
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    static function removeContact($contact) {
+        try {
+            
+            $pdo = new PDO(self::CONNECTION_STRING, self::USER, self::PASSWORD);
+            $sql = "DELETE FROM Contact WHERE id=:contactId";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":contactId", $contact->GetId());
+            $stmt->execute();
+            echo 'remove !';
+            
+        } catch (PDOException $ex) {
+            echo $ex->getMessage();
+        }
+    }
+    
+    static function updateContact($contact){
+        try {
+            $pdo = new PDO(self::CONNECTION_STRING, self::USER, self::PASSWORD);
+            $sql = "UPDATE Contact SET nom=:nom, prenom=:prenom,telephone=:telephone,rue=:rue,numero=:numero,codePostal=:codePostal,ville=:ville WHERE id=:id";
+            $stmt = $pdo->prepare($sql);
+
+            $stmt->bindParam(":id", $contact->getId());
+            $stmt->bindParam(':nom', $contact->getNom());
+            $stmt->bindParam(':prenom', $contact->getPrenom());
+            $stmt->bindParam(':telephone', $contact->getTelephone());
+            $stmt->bindParam(':rue', $contact->getRue());
+            $stmt->bindParam(':numero', $contact->getNumero());
+            $stmt->bindParam(':codePostal', $contact->getCodePostal());
+            $stmt->bindParam(':ville', $contact->getVille());
+
+            $stmt->execute();
+            
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+
+    }
+    
+    static function getContact($id){
+         try {
+            $pdo = new PDO(self::CONNECTION_STRING, self::USER, self::PASSWORD);
+            $sql = "SELECT * FROM contact WHERE id=:id LIMIT 1";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            
+            $row= $stmt->fetchObject();
+            if($row!=null){
+                $contact = new Contact($row->nom, $row->prenom, $row->telephone, $row->rue, $row->numero, $row->codePostal, $row->ville);
+            $contact->setId($row->id);
+            $contact->setIdUtilisateur($row->id_utilisateur);
+            
+            return $contact;
+            }
+                
         } catch (Exception $ex) {
             echo $ex->getMessage();
         }
