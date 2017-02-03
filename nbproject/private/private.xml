@@ -11,6 +11,16 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/xampp/htdocs/AdressBook/view_login.php</file>
+            <file>file:/C:/xampp/htdocs/AdressBook/title.html</file>
+            <file>file:/C:/xampp/htdocs/AdressBook/vendor/MiguelForget/Contact.php</file>
+            <file>file:/C:/xampp/htdocs/AdressBook/view_listeContact.php</file>
+            <file>file:/C:/xampp/htdocs/AdressBook/view_signIn.php</file>
+            <file>file:/C:/xampp/htdocs/AdressBook/view_updateContact.php</file>
+            <file>file:/C:/xampp/htdocs/AdressBook/view_contactDetails.php</file>
+            <file>file:/C:/xampp/htdocs/AdressBook/view_newContact.php</file>
+            <file>file:/C:/xampp/htdocs/AdressBook/post.php</file>
+        </group>
     </open-files>
 </project-private>
