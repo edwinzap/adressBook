@@ -40,6 +40,7 @@ elseif (isset($_POST['view_login'])) {
     if (logIn() == True) {
         header('Location: view_listeContact.php');
     } else {
+		unset($_SESSION['utilisateur']);
         header('Location: view_login.php');
     }
 }

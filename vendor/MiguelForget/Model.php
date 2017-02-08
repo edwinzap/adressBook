@@ -15,9 +15,9 @@ require 'vendor/autoload.php';
 
 class Model {
 
-    const CONNECTION_STRING = 'mysql:host=localhost;dbname=adressbook';
-    const USER = 'miguel';
-    const PASSWORD = 'formig09';
+    const CONNECTION_STRING = 'mysql:host=mysql1.paris1.alwaysdata.com;dbname=edwinzap_adressbook';
+    const USER = 'edwinzap_miguel';
+    const PASSWORD = 'test123';
 
     private static function getUtilisateur($utilisateur) {
         try {
@@ -61,24 +61,39 @@ class Model {
                 return false;
         } catch (PDOException $ex) {
             echo $ex->getMessage();
+			return false;
         }
     }
 
     static function addUtilisateur($utilisateur) {
-
+try{
         if (self::utilisateurExists($utilisateur) == false) {
 
-            $pdo = new PDO(self::CONNECTION_STRING, 'root');
-            $sql = "INSERT INTO Utilisateur(login, password) VALUES (:login,:password)";
+            $pdo = new PDO(self::CONNECTION_STRING,self::USER, self::PASSWORD);    
+            $sql = "INSERT INTO utilisateur(login, password) VALUES (:login,:password)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':login', $utilisateur->getLogin());
             $stmt->bindParam(':password', password_hash($utilisateur->getPassword(), PASSWORD_DEFAULT));
-            $stmt->execute();
+			var_dump($pdo);
+			if (!$stmt) {
+   echo "\nPDO::errorInfo():\n";
+   print_r($dbh->errorInfo());
+}else
+{
+	        $stmt->execute();
+			echo 'ok';
+}
 
+    
             return true;
         } else {
             return false;
         }
+}
+catch (Exception $ex){
+	echo $ex->getMessage();
+	return false;
+}
     }
 
     static function getContactWhere($idUtilisateur, $value) {
@@ -107,7 +122,7 @@ class Model {
     static function addContact($contact) {
         try {
             $pdo = new PDO(self::CONNECTION_STRING, self::USER, self::PASSWORD);
-            $sql = "INSERT INTO Contact(nom, prenom,telephone,rue,numero,codePostal,ville, id_utilisateur) VALUES (:nom,:prenom,:telephone,:rue,:numero,:codePostal,:ville,:id_utilisateur)";
+            $sql = "INSERT INTO contact(nom, prenom,telephone,rue,numero,codePostal,ville, id_utilisateur) VALUES (:nom,:prenom,:telephone,:rue,:numero,:codePostal,:ville,:id_utilisateur)";
             $stmt = $pdo->prepare($sql);
 
             $stmt->bindParam(':nom', $contact->getNom());
@@ -130,7 +145,7 @@ class Model {
         try {
             
             $pdo = new PDO(self::CONNECTION_STRING, self::USER, self::PASSWORD);
-            $sql = "DELETE FROM Contact WHERE id=:contactId";
+            $sql = "DELETE FROM contact WHERE id=:contactId";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(":contactId", $contact->GetId());
             $stmt->execute();
@@ -144,7 +159,7 @@ class Model {
     static function updateContact($contact){
         try {
             $pdo = new PDO(self::CONNECTION_STRING, self::USER, self::PASSWORD);
-            $sql = "UPDATE Contact SET nom=:nom, prenom=:prenom,telephone=:telephone,rue=:rue,numero=:numero,codePostal=:codePostal,ville=:ville WHERE id=:id";
+            $sql = "UPDATE contact SET nom=:nom, prenom=:prenom,telephone=:telephone,rue=:rue,numero=:numero,codePostal=:codePostal,ville=:ville WHERE id=:id";
             $stmt = $pdo->prepare($sql);
 
             $stmt->bindParam(":id", $contact->getId());
